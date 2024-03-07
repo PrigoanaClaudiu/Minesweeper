@@ -5,14 +5,15 @@ import settings
 
 
 class Cell:
-    all = []    # a list with all the instances (mines, not mines)
+    all = []  # a list with all the instances (mines, not mines)
+
     def __init__(self, x, y, is_mine=False):
         """
         Constructor
         :param is_mine: False -> it's not a mine, True -> it's a mine
         """
         self.is_mine = is_mine
-        self.cell_button_obj = None # the button obj, that will receive none when created
+        self.cell_button_obj = None  # the button obj, that will receive none when created
         self.x = x  # attribute of the cell
         self.y = y  # attribute of the cell
 
@@ -25,15 +26,14 @@ class Cell:
         :param location: the location of the button
         :return:
         """
-        #create the button
+        # create the button
         button = Button(
             location,
-            width=12,   #
-            height=4,   # dimensions of the buttons
-            text=f"{self.x},{self.y}"
+            width=12,  #
+            height=4,  # dimensions of the buttons
         )
         # assign event  - Button-1 = left click  - Button-3 = right click
-        button.bind('<Button-1>', self.left_click_actions)  #   not calling the method, only give it reference
+        button.bind('<Button-1>', self.left_click_actions)  # not calling the method, only give it reference
         button.bind('<Button-3>', self.right_click_actions)  # same
 
         self.cell_button_obj = button
@@ -46,8 +46,46 @@ class Cell:
         else:
             self.show_cell()
 
+    def get_cell_by_axis(self, x, y):
+        # return a cell obj based on the value of x and y
+        for cell in Cell.all:
+            if cell.x == x and cell.y == y:
+                return cell
+
+    @property # read only attribute -> now we can use it like an attribute like the ones in __init
+    def surrounded_cells_mines_length(self):
+        """
+        Function that iterate trough the surrounded cells and counter the mines
+        :return: the number of mines in surrounded cells
+        """
+        counter = 0
+        for cell in self.surrounded_cells:
+            if cell.is_mine:
+                counter += 1
+        return counter
+
     def show_cell(self):
-        pass
+        self.cell_button_obj.configure(
+            text=self.surrounded_cells_mines_length
+        )
+
+    @property  # read only attribute -> now we can use it like an attribute like the ones in __init
+    def surrounded_cells(self):
+        # the 8th cells
+        cells = [
+            self.get_cell_by_axis(self.x - 1, self.y - 1),
+            self.get_cell_by_axis(self.x - 1, self.y),
+            self.get_cell_by_axis(self.x - 1, self.y + 1),
+            self.get_cell_by_axis(self.x, self.y + 1),
+            self.get_cell_by_axis(self.x + 1, self.y + 1),
+            self.get_cell_by_axis(self.x + 1, self.y),
+            self.get_cell_by_axis(self.x + 1, self.y - 1),
+            self.get_cell_by_axis(self.x, self.y - 1),
+        ]
+
+        # list comprehension to delete the None cells
+        cells = [cell for cell in cells if cell is not None]
+        return cells
 
     def show_mine(self):
         # a logic to interrupt the game and display a message that play lost
@@ -57,7 +95,7 @@ class Cell:
         print(event)
         print("R click")
 
-    #use globally
+    # use globally
     @staticmethod
     def randomize_mines():
         picked_cells = random.sample(
