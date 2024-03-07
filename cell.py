@@ -1,17 +1,21 @@
-from tkinter import Button
+from tkinter import Button, Label
 import random
 
 import settings
 
 
 class Cell:
+    # class level
     all = []  # a list with all the instances (mines, not mines)
+    cell_count_lebel_obj = None
+
 
     def __init__(self, x, y, is_mine=False):
         """
         Constructor
         :param is_mine: False -> it's not a mine, True -> it's a mine
         """
+        # instance level
         self.is_mine = is_mine
         self.cell_button_obj = None  # the button obj, that will receive none when created
         self.x = x  # attribute of the cell
@@ -38,13 +42,32 @@ class Cell:
 
         self.cell_button_obj = button
 
+    @staticmethod  # -> a method that it is used by the class and not for the use of instance
+    def create_cell_count_label(location):
+        """
+        1 time calling
+        Label -> will display only the text without changing anything
+        Function that shows how many cell remains to discover
+        :return: lebel to the cell_count_lebel_obj
+        """
+        lbl = Label(
+            location,
+            text=f"Cells left: {settings.CELL_COUNT}"
+        )
+        Cell.cell_count_lebel_obj = lbl
+
     # passing 2 args for this functions bcs Kindle
     def left_click_actions(self, event):
         # event will take some infos about what event it happend
         if self.is_mine:
             self.show_mine()
         else:
-            self.show_cell()
+            # if for displaying all the surrounded cells if there's no mines
+            if self.surrounded_cells_mines_length == 0:
+                for cell_obs in self.surrounded_cells:
+                    cell_obs.show_cell()
+
+            self.show_cell()  # display how many bombs on the cell
 
     def get_cell_by_axis(self, x, y):
         # return a cell obj based on the value of x and y
@@ -52,7 +75,7 @@ class Cell:
             if cell.x == x and cell.y == y:
                 return cell
 
-    @property # read only attribute -> now we can use it like an attribute like the ones in __init
+    @property  # read only attribute -> now we can use it like an attribute like the ones in __init
     def surrounded_cells_mines_length(self):
         """
         Function that iterate trough the surrounded cells and counter the mines
