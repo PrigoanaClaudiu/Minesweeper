@@ -19,6 +19,7 @@ class Cell:
         # instance level
         self.is_mine = is_mine
         self.is_open = None
+        self.is_mine_candidate = False
         self.cell_button_obj = None  # the button obj, that will receive none when created
         self.x = x  # attribute of the cell
         self.y = y  # attribute of the cell
@@ -133,8 +134,16 @@ class Cell:
         self.cell_button_obj.configure(bg='red')
 
     def right_click_actions(self, event):
-        print(event)
-        print("R click")
+        if not self.is_mine_candidate:
+            self.cell_button_obj.configure(
+                bg='orange'
+            )
+            self.is_mine_candidate = True
+        else:
+            self.cell_button_obj.configure(
+                bg='SystemButtonFace'   # the default color
+            )
+            self.is_mine_candidate = False
 
     # use globally
     @staticmethod

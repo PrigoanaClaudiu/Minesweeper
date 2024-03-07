@@ -9,8 +9,7 @@ root = Tk()
 # override the settings of the window
 root.configure(bg='black')  # change the backround color
 root.geometry(f'{settings.WIDTH}x{settings.HEIGHT}')  # change the dimensions of the window (WIDTH x HEIGHT)
-root.title("My minesweeper")  # change the title of the window
-root.resizable(False, False)  # deactivate resizable
+root.title("My minesweeper")  # change the title of the window root.resizable(False, False)  # deactivate resizable
 
 # frames
 top_frame = Frame(
