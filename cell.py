@@ -18,6 +18,7 @@ class Cell:
         """
         # instance level
         self.is_mine = is_mine
+        self.is_open = None
         self.cell_button_obj = None  # the button obj, that will receive none when created
         self.x = x  # attribute of the cell
         self.y = y  # attribute of the cell
@@ -94,17 +95,20 @@ class Cell:
         return counter
 
     def show_cell(self):
-        Cell.cell_count -= 1
-        self.cell_button_obj.configure(
-            text=self.surrounded_cells_mines_length
-        )
-
-        # replace the text of the cell count label with the newer count
-        if Cell.cell_count_lebel_obj:
-            Cell.cell_count_lebel_obj.configure(
-                text=f"Cells left: {Cell.cell_count}",
-
+        if not self.is_open:
+            Cell.cell_count -= 1
+            self.cell_button_obj.configure(
+                text=self.surrounded_cells_mines_length
             )
+
+            # replace the text of the cell count label with the newer count
+            if Cell.cell_count_lebel_obj:
+                Cell.cell_count_lebel_obj.configure(
+                    text=f"Cells left: {Cell.cell_count}",
+
+                )
+        # mark the cell as opened (for not counting a cell more times than 1)
+        self.is_open = True
 
     @property  # read only attribute -> now we can use it like an attribute like the ones in __init
     def surrounded_cells(self):
