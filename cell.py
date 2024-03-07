@@ -1,7 +1,9 @@
+import sys
 from tkinter import Button, Label
 import random
 import ctypes   # generate error mesages
 import settings
+import sys
 
 
 class Cell:
@@ -132,7 +134,10 @@ class Cell:
     def show_mine(self):
         # a logic to interrupt the game and display a message that play lost
         self.cell_button_obj.configure(bg='red')
+
+        # generate the message box
         ctypes.windll.user32.MessageBoxW(0, "Mine clicked!", "Game over!", 0)
+        sys.exit()
 
     def right_click_actions(self, event):
         if not self.is_mine_candidate:
