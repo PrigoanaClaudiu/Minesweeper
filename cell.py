@@ -8,6 +8,7 @@ class Cell:
     # class level
     all = []  # a list with all the instances (mines, not mines)
     cell_count_lebel_obj = None
+    cell_count = settings.CELL_COUNT # the value of cells
 
 
     def __init__(self, x, y, is_mine=False):
@@ -52,7 +53,12 @@ class Cell:
         """
         lbl = Label(
             location,
-            text=f"Cells left: {settings.CELL_COUNT}"
+            bg='black',
+            fg='white',
+            text=f"Cells left: {Cell.cell_count}",
+            width=12,   #
+            height=4,   # dimensions of the lbl button
+            font=("", 30)   # font("the font we are using", the size)
         )
         Cell.cell_count_lebel_obj = lbl
 
@@ -88,9 +94,17 @@ class Cell:
         return counter
 
     def show_cell(self):
+        Cell.cell_count -= 1
         self.cell_button_obj.configure(
             text=self.surrounded_cells_mines_length
         )
+
+        # replace the text of the cell count label with the newer count
+        if Cell.cell_count_lebel_obj:
+            Cell.cell_count_lebel_obj.configure(
+                text=f"Cells left: {Cell.cell_count}",
+
+            )
 
     @property  # read only attribute -> now we can use it like an attribute like the ones in __init
     def surrounded_cells(self):

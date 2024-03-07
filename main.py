@@ -55,6 +55,10 @@ for x in range(settings.GRID_SIZE):
             column=x, row=y
         )
 
+# call the label from the Cell class
+Cell.create_cell_count_label(left_frame)
+Cell.cell_count_lebel_obj.place(x=0, y=0)
+
 Cell.randomize_mines()  # pick some random cells for mines (based on the setting.MINES_COUNT)
 
 # run the window
