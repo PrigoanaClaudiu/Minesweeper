@@ -79,6 +79,10 @@ class Cell:
 
             self.show_cell()  # display how many bombs on the cell
 
+        # cancel left and right clicks events if cell is opened
+        self.cell_button_obj.unbind('<Button-1>')
+        self.cell_button_obj.unbind('<Button-3>')
+
     def get_cell_by_axis(self, x, y):
         # return a cell obj based on the value of x and y
         for cell in Cell.all:
@@ -110,6 +114,10 @@ class Cell:
                     text=f"Cells left: {Cell.cell_count}",
 
                 )
+            # if this was a mine candidate, we should restore backround color
+            self.cell_button_obj.configure(
+                bg='SystemButtonFace'
+            )
         # mark the cell as opened (for not counting a cell more times than 1)
         self.is_open = True
 
